@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>O.O.O 노래 취향 소트</title>
+  <title>모브닝 노래 취향 소트</title>
   <style type="text/css">
     /* ——— 전체 레이아웃 ——— */
     body {
@@ -20,6 +20,7 @@
       border-spacing: 10px 5px;
       font-size: 12px;
       line-height: 1.2;             /* 조금 촘촘하게 */
+      table-layout: fixed;
     }
     #battleNumber {
       padding-bottom: 10px;
@@ -78,42 +79,68 @@
       <td id="battleNumber" colspan="3">&nbsp;</td>
     </tr>
     <tr>
-      <td id="leftField" rowspan="2" onclick="if(!finishFlag) sortList(-1);">
-        &nbsp;
-      </td>
-      <td class="middleField" onclick="if(!finishFlag) sortList(0);">
-        둘 다 좋다
-      </td>
-      <td id="rightField" rowspan="2" onclick="if(!finishFlag) sortList(1);">
-        &nbsp;
-      </td>
+      <td id="leftField" rowspan="2" onclick="if(!finishFlag) sortList(-1);">&nbsp;</td>
+      <td class="middleField" onclick="if(!finishFlag) sortList(0);">둘 다 좋다</td>
+      <td id="rightField" rowspan="2" onclick="if(!finishFlag) sortList(1);">&nbsp;</td>
     </tr>
     <tr>
-      <td class="middleField" onclick="if(!finishFlag) sortList(0);">
-        모르겠다
-      </td>
+      <td class="middleField" onclick="if(!finishFlag) sortList(0);">모르겠다</td>
     </tr>
   </table>
 
   <div id="resultField">
-    <p>천재 밴드 천재 곡</p>
-    <p>공연 맨날 해주세요.</p>
+    <p>명곡을 숨겨놓지 말고</p>
+    <p>공연으로 들려달라</p>
     <button class="copy-btn" id="copyBtn" onclick="copyResult()">결과 복사하기</button>
   </div>
 
   <script type="text/javascript">
-    // — 노래 제목 전부 나열 —
-    var namMember = [
-      "0503 신곡","사랑이란 선 하나 긋고서","비가 오는 날에","생각이 나잖아",
-      "아침","거짓말","눈이 마주쳤을 때","잔","모래","소녀와 개","빈","지난, 아침",
-      "나는 왜","혹은 진실","밤과 마음","내일 아침","푸른달","별",
-      "너의 어젠, 나의 오늘","우리는 영문도 모른 채","시소","꽃(개화)",
-      "골목길이 끝나는 곳","?(물음표)","너와 나","도미노","숨바꼭질",
-      "방, 비","언제나 그랬듯","어떤 걸까","사랑에 어리석은 난","앞으로",
-      "모래에게","Surfer's High","GO!DO!RIGHT!","윤월의 밤","섬",
-      "섬좌표","마음이 그래","가을하늘","텅",
-      "봄, 너, 사랑의 시작","쉬어가","둘 위해서만"
-    ];
+  var namMember = [
+    "Silly Man",
+    "You are a Rainbow",
+    "Touch me Lady",
+    "TURNING LIGHT",
+    "GOT TO BE WILD",
+    "FOR A BETTER NOW",
+    "LITTLE FIGHTERS",
+    "DELAYED LETTER",
+    "Maxic",
+    "외",
+    "그날의 우리는 오늘과 같을 수 있을까",
+    "내가 있을게",
+    "0415",
+    "EbM (Bonus Track)",
+    "You're A Rainbow (Bonus Track)",
+    "폼페이 (Love Is Forever)",
+    "내가 사랑한 모든 것들은 나를 눈물짓게 할 테니까",
+    "칵테일 얼음이 녹기 전에",
+    "극야 (極夜)",
+    "Interlude",
+    "마젤란",
+    "사해",
+    "3-1",
+    "너와의 이야기",
+    "나 홀로 마음껏 그대를 사랑하는 밤",
+    "우리에게 아픔이 필요한 이유",
+    "여우비",
+    "봄날의 우리",
+    "빛나는 별은 내 것이 아니었음을",
+    "원탁의 기사",
+    "너의 이름, 청춘",
+    "어제를 사는 사람",
+    "보통의 외로움",
+    "발사",
+    "ADAM",
+    "DAEDLINE",
+    "사이렌",
+    "괴물",
+    "메딕 (Feat. ADORA)",
+    "알바트로스",
+    "해방",
+    "안식",
+    "테리어",
+    "낙화"
+  ];
 
     // — 내부 변수 —
     var lstMember = [], parent = [], equal = [], rec = [];
@@ -121,54 +148,54 @@
     var numQuestion, totalSize, finishSize, finishFlag;
 
     function initList() {
-      lstMember = [namMember.map(function(_,i){return i;})];
+      lstMember = [namMember.map(function(_, i){ return i; })];
       parent   = [-1];
       totalSize = 0;
-      for(var i=0;i<lstMember.length;i++){
+      for (var i = 0; i < lstMember.length; i++) {
         var arr = lstMember[i];
-        if(arr.length>=2){
-          var mid = Math.ceil(arr.length/2);
-          lstMember.push(arr.slice(0,mid)); parent.push(i); totalSize+=mid;
-          lstMember.push(arr.slice(mid));   parent.push(i); totalSize+=arr.length-mid;
+        if (arr.length >= 2) {
+          var mid = Math.ceil(arr.length / 2);
+          lstMember.push(arr.slice(0, mid)); parent.push(i); totalSize += mid;
+          lstMember.push(arr.slice(mid));    parent.push(i); totalSize += arr.length - mid;
         }
       }
       rec    = Array(namMember.length).fill(0);
-      equal  = Array(namMember.length+1).fill(-1);
-      cmp1   = lstMember.length-2;
-      cmp2   = lstMember.length-1;
+      equal  = Array(namMember.length + 1).fill(-1);
+      cmp1   = lstMember.length - 2;
+      cmp2   = lstMember.length - 1;
       head1  = head2 = nrec = numQuestion = finishSize = 0;
       finishFlag = false;
     }
 
-    function appendFrom(idx,pos){
+    function appendFrom(idx, pos) {
       rec[nrec++] = lstMember[idx][pos];
     }
 
-    function sortList(flag){
-      if(flag<0)      appendFrom(cmp1, head1++);
-      else if(flag>0) appendFrom(cmp2, head2++);
+    function sortList(flag) {
+      if (flag < 0)      appendFrom(cmp1, head1++);
+      else if (flag > 0) appendFrom(cmp2, head2++);
       else {
         appendFrom(cmp1, head1++);
-        equal[ rec[nrec-1] ] = lstMember[cmp2][head2];
+        equal[ rec[nrec - 1] ] = lstMember[cmp2][head2];
         appendFrom(cmp2, head2++);
       }
       // 남은 처리
-      while(head1<lstMember[cmp1].length && head2==lstMember[cmp2].length)
+      while (head1 < lstMember[cmp1].length && head2 == lstMember[cmp2].length)
         appendFrom(cmp1, head1++);
-      while(head2<lstMember[cmp2].length && head1==lstMember[cmp1].length)
+      while (head2 < lstMember[cmp2].length && head1 == lstMember[cmp1].length)
         appendFrom(cmp2, head2++);
       // 병합 완료
-      if(head1==lstMember[cmp1].length && head2==lstMember[cmp2].length){
+      if (head1 == lstMember[cmp1].length && head2 == lstMember[cmp2].length) {
         var p = parent[cmp1];
-        lstMember[p] = rec.slice(0,lstMember[cmp1].length+lstMember[cmp2].length);
+        lstMember[p] = rec.slice(0, lstMember[cmp1].length + lstMember[cmp2].length);
         lstMember.pop(); lstMember.pop();
         parent.pop(); parent.pop();
-        cmp1-=2; cmp2-=2;
-        head1=head2=nrec=0;
+        cmp1 -= 2; cmp2 -= 2;
+        head1 = head2 = nrec = 0;
         rec.fill(0);
       }
       finishSize = nrec;
-      if(cmp1<0){
+      if (cmp1 < 0) {
         showResult();
         finishFlag = true;
       } else {
@@ -176,9 +203,9 @@
       }
     }
 
-    function showImage(){
+    function showImage() {
       document.getElementById('battleNumber').innerHTML =
-        "Battle No."+numQuestion+"<br>"+Math.floor(finishSize*100/totalSize)+"% sorted.";
+        "Battle No." + numQuestion + "<br>" + Math.floor(finishSize * 100 / totalSize) + "% sorted.";
       numQuestion++;
       document.getElementById('leftField').textContent =
         namMember[lstMember[cmp1][head1]];
@@ -186,18 +213,18 @@
         namMember[lstMember[cmp2][head2]];
     }
 
-    function showResult(){
+    function showResult() {
       var str = '<table style="width:200px;margin:0 auto;border-collapse:collapse;">'
               + '<tr><td style="background:#000;color:#fff;text-align:center;">순위</td>'
               + '<td style="background:#000;color:#fff;text-align:center;">이름</td></tr>';
-      var rank=1, same=1;
-      for(var i=0;i<namMember.length;i++){
+      var rank = 1, same = 1;
+      for (var i = 0; i < namMember.length; i++) {
         str += '<tr><td style="border:1px solid #000;text-align:right;padding:2px 5px;">'
-             + rank +'</td><td style="border:1px solid #000;padding:2px 5px;">'
+             + rank + '</td><td style="border:1px solid #000;padding:2px 5px;">'
              + namMember[lstMember[0][i]] + '</td></tr>';
-        if(i<namMember.length-1){
-          if(equal[lstMember[0][i]]==lstMember[0][i+1]) same++;
-          else { rank+=same; same=1; }
+        if (i < namMember.length - 1) {
+          if (equal[lstMember[0][i]] == lstMember[0][i+1]) same++;
+          else { rank += same; same = 1; }
         }
       }
       str += '</table>';
@@ -206,7 +233,7 @@
       document.getElementById('copyBtn').style.display = 'inline-block';
     }
 
-    function copyResult(){
+    function copyResult() {
       var txt = document.getElementById('resultField').innerText;
       navigator.clipboard.writeText(txt)
         .then(function(){ alert('결과가 복사되었습니다!'); })
